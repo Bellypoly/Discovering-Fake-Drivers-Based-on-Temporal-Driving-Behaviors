@@ -1,6 +1,6 @@
 getwd() #"/Users/hgellban
 #/Users/hgellban/Documents/111_one_drive/OneDrive - Texas Tech University/ttu-cs/2020fall/programming_with_R/project/code
-setwd("/Users/hgellban/Documents/111_one_drive/OneDrive - Texas Tech University/ttu-cs/2020fall/programming_with_R/project/code")
+setwd("/Users/hgellban/Documents/111_one_drive/OneDrive - Texas Tech University/ttu-cs/2020fall/programming_with_R/project/code/Discovering-Fake-Drivers-Based-on-Temporal-Driving-Behaviors")
 
 
 
@@ -23,9 +23,10 @@ library(party)
 library(caret)
 library(e1071) 
 
-install.packages('microbenchmark', dependencies = TRUE)
+#install.packages('microbenchmark', dependencies = TRUE)
 library(microbenchmark)
 library(GGally)
+library(randomForest)
 
 source("fg.r")
 #factor(fg_df$Driver)
@@ -38,16 +39,37 @@ df_train <- fg_df[samp,]
 df_test <- fg_df[-samp,]
 classifier <- function(df_train, df_test, classifier_type = "ctree") {
   cls <- NULL
+  df_train <- droplevels(df_train)
   if (classifier_type == "ctree"){
     cls <- ctree(Driver ~ ., data=df_train)
   }else if(classifier_type == "svm"){
-    cls = svm(formula = Driver ~ ., data = df_train, type = 'C-classification',kernel = 'linear')     
+    cls <- svm(formula = Driver ~ ., data = df_train, type = 'C-classification',kernel = 'linear')     
   }#
-  else if(classifier_type == "lr"){
-    cls = lm(formula = Driver ~ ., data = df_train)     
-  }#
-  y_pred <- predict(cls, newdata = df_test)
-  y_test <- df_test$Driver
+  #  else if(classifier_type == "lr"){
+  #    #cls <- lm(Driver ~ ., data = df_train)   
+  #    cls <- glm( Driver ~., data = df_train, family = binomial)
+  #  }#
+  else if(classifier_type == "rf"){#random forest
+    cls <- randomForest(formula = Driver ~., data = df_train)
+  }#  
+  else if(classifier_type == "xxx"){#new
+    cls <- xxx( Driver ~., data = df_train)
+  }#  
+  
+  if (classifier_type == "knn"){
+    X <- subset(df_train, select = -c(Driver) )
+    X_test <- subset(df_test, select = -c(Driver) )
+    y <- df_train$Driver#df_train$Driver
+    k <- 3
+    y_pred <- knn3Train(train=X, test=X_test, cl=y, k=k, prob = FALSE)
+    y_pred <- factor(y_pred)
+    y_test <- df_test$Driver
+    #y_test <- as.numeric(y_test)
+  }else{
+    y_pred <- predict(cls, newdata = df_test)
+    y_test <- df_test$Driver
+  }
+  
   print("y_test")
   print(y_test)
   print("y_pred")
@@ -58,6 +80,20 @@ classifier <- function(df_train, df_test, classifier_type = "ctree") {
   #plot(df_train)#, pch = 16) 
   #abline(cls)
 }#classifier
+#y <- df_train$Driver
+#df_train <- droplevels(df_train)
+#cls <- randomForest(Driver ~., data = df_train,ntree=100,mtry=2, importance = TRUE) 
+#classifier(df_train, df_test, classifier_type = "rf")
+
+#is.na( df_train$Driver)
+#dim(df_train)
+#classifier(df_train, df_test, classifier_type = "knn")
+#X <- subset(df_train, select = -c(Driver) )
+#X_test <- subset(df_test, select = -c(Driver) )
+#y <- as.matrix(df_train$Driver)#df_train$Driver
+#k <- 3
+#y_pred <- knn3Train(train=X, test=X_test, cl=y, k=k)
+
 #X = subset(df_train, select = -c(Driver) )
 #y = subset(df_train, select = c(Driver) )
 #m <- as.matrix(X)
@@ -87,7 +123,8 @@ draw_features <- function(data){
 
 classifier(df_train, df_test, classifier_type = "ctree")
 classifier(df_train, df_test, classifier_type = "svm")
-#classifier(df_train, df_test, classifier_type = "lr")
+classifier(df_train, df_test, classifier_type = "rf")
+classifier(df_train, df_test, classifier_type = "knn")
 
 microbenchmark(
   classifier(df_train, df_test, classifier_type = "ctree"),
@@ -96,5 +133,5 @@ microbenchmark(
 
 
 draw_features(df_train)
-
+subset(df_train, select = -c(Driver) )
 print("end plotting")
