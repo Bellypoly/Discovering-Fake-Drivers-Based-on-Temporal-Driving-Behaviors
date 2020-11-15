@@ -10,7 +10,7 @@ n = 20 # number of driving behaviors
 m = 10 # number of variables
 L = 30 #lebgth of the signal
 F <- 7 # number of feature algorithms or #features
-
+source("setup.r")
 
 library(e1071) # used for kurtosis, skewness
 
