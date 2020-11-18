@@ -33,12 +33,9 @@ get_dataset <- function(n, m, L){
 #  return (trajectory)
 #}
 
-
-
-
 # https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/fft
 # Fast Discrete Fourier Transform (FFT)
-not_used_get_fft <- function(data_m){
+get_fft <- function(data_m){
   fft_vec <- apply(data_m, 2, fft)
   fft_vec <- Re(fft_vec)  
   return (data_m)
@@ -107,7 +104,7 @@ not_used_fg_old <- function(data, n, m, L, F){
     print("")
   }#for i
   fg_df <- as.data.frame(X)
-  fg_df$Class <- y
+  fg_df$Driver <- y
   print(head(fg_df))
   print(dim(fg_df))
   return (fg_df)
@@ -151,8 +148,8 @@ fg <- function(data, y, n, m, L, F){
   fg_df <- as.data.frame(X)
   print("End creating fg_df from X")
   print(dim(fg_df))
-  fg_df$Class <- as.vector(y[1:n])#y
-  fg_df$Class <- factor(fg_df$Class)
+  fg_df$Driver <- as.vector(y[1:n])#y
+  fg_df$Driver <- factor(fg_df$Driver)
   print(head(fg_df))
   print(dim(fg_df))
   return (fg_df)
@@ -162,7 +159,7 @@ dim(data_m)
 n
 #fg_df <- fg(data_m, y, n, m, L, F)
 fg_df <- fg(data_m, y, n, m, L, F)
-#target_column <- c("Class")
+#target_column <- c("Driver")
 #fg_df <- do_min_max_normalization(fg_df)
 dim(fg_df)
 
@@ -170,4 +167,18 @@ length(y)
 dim(fg_df)
 
 
+#data_m[1:10,]
+#f1 <- apply(data_m[1:10,], 2, mean) #get mean by column as second paramater = 2
+#f2 <- apply(data_m[1:10,], 2, mean) #get mean by column as second paramater = 2
+# apply(data_m[1:30,], 2, kurtosis)
+#c(f1, f2)
 
+#generate_feature_set(data_m[1:30,])
+# matrix(1.0, nrow = 2, ncol = 3)
+
+
+
+#x <- 1:4
+
+#fft_vec <- fft(x)
+#Re(fft_vec)

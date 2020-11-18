@@ -1,11 +1,17 @@
 getwd() #"/Users/hgellban
 #/Users/hgellban/Documents/111_one_drive/OneDrive - Texas Tech University/ttu-cs/2020fall/programming_with_R/project/code
-setwd("/Users/hgellban/Documents/111_one_drive/OneDrive - Texas Tech University/ttu-cs/2020fall/programming_with_R/project/code/Discovering-Fake-Drivers-Based-on-Temporal-Driving-Behaviors")
+#setwd("/Users/hgellban/Documents/111_one_drive/OneDrive - Texas Tech University/ttu-cs/2020fall/programming_with_R/project/code/Discovering-Fake-Drivers-Based-on-Temporal-Driving-Behaviors")
+setwd("C:/Users/habugell/OneDrive - Texas Tech University/ttu-cs/2020fall/programming_with_R/project/code/Discovering-Fake-Drivers-Based-on-Temporal-Driving-Behaviors")
 file_org_dataset <- "./dataset/Driving_Data_KIA_SOUL.csv"
 #dataset description: https://www.iit.cnr.it/sites/default/files/human-behavior-characterization.pdf
 
-chunk_size = 100
-overlap_ratio = 0.5
+chunk_size <- 30#100
+overlap_ratio <- 0.5
+
+training_ratio <- 0.5 #0.8
+
+set.seed(1)
+
 selected_signals_class <- c(
   "Accelerator_Pedal_value",
   "Short_Term_Fuel_Trim_Bank1",
@@ -21,3 +27,37 @@ selected_signals_class <- c(
   "Steering_wheel_angle",
   "Class"
 )
+selected_signals <- head(selected_signals_class, -1)
+selected_signals
+m <- length(selected_signals)
+m
+L <- chunk_size
+target <- tail(selected_signals_class, n=1)
+
+
+library(e1071) # used for kurtosis, skewness
+# Splitting the dataset into the Training set and Test set 
+#install.packages('caTools') 
+library(caTools)
+
+## build a decision tree with ctree() using package party
+##install.packages('caret', repos='http://cran.rstudio.com/', dependencies = TRUE)
+
+
+##install.packages('caret', dependencies = TRUE)
+##install.packages("multcomp")
+##library(multcomp)
+##install.packages("coin")
+
+#install.packages("party", dependencies = TRUE)
+library(party)
+#install.packages('caret', repos='http://cran.rstudio.com/', dependencies = TRUE)
+library(caret)
+library(e1071) 
+
+#install.packages('microbenchmark', dependencies = TRUE)
+library(microbenchmark)
+library(GGally)
+library(randomForest)
+
+require(caTools)

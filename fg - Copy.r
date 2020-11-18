@@ -5,10 +5,10 @@
 # How? you can run the program using RStudio by updating the constants. 
 #     There is a demo random dataset
 
-## Constants
-#n <- 20 # number of driving behaviors
-#m <- 10 # number of variables/ Signals
-#L <- 30 #length of the signal
+# Constants
+n <- 20 # number of driving behaviors
+m <- 10 # number of variables/ Signals
+L <- 30 #lebgth of the signal
 F <- 7 # number of feature algorithms or #features
 #source("setup.r")
 source("preprocessing.r")
@@ -33,12 +33,9 @@ get_dataset <- function(n, m, L){
 #  return (trajectory)
 #}
 
-
-
-
 # https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/fft
 # Fast Discrete Fourier Transform (FFT)
-not_used_get_fft <- function(data_m){
+get_fft <- function(data_m){
   fft_vec <- apply(data_m, 2, fft)
   fft_vec <- Re(fft_vec)  
   return (data_m)
@@ -48,8 +45,7 @@ not_used_get_fft <- function(data_m){
 # output => feature_set_vec: is a vector(F*m), where F is the number of features.
 generate_feature_set <- function(m_matrix){
   data_m <- m_matrix
-  #data_m <- get_fft(m_matrix)
-  
+  data_m <- get_fft(m_matrix)
   #data_m <- get_fourier(function(t,w) {sin(w*t)}, 1, ts=m_matrix) 
   # we use apply with second paramater = 2, to compute a feature (e.g., mean) per column
   f1 <- apply(data_m, 2, mean) # get mean
@@ -70,7 +66,6 @@ generate_feature_set <- function(m_matrix){
   #feature_set_vec <- feature_set_vec[2:length(feature_set_vec)-1]
   return (feature_set_vec)
 }
-
 # feature generation function
 # input => 
 #     data: a matrix(n*L,m) of raw signals.
@@ -79,7 +74,7 @@ generate_feature_set <- function(m_matrix){
 #     L: the length of the signal.
 # output => 
 #     fg_df : is a dataframe(n,F*m + 1) of a feature set + its related class label.
-not_used_fg_old <- function(data, n, m, L, F){
+fg <- function(data, n, m, L, F){
   
   #     X: is a matrix(n,F*m) of a feature set.
   X <- matrix(0.0, nrow = n, ncol = F*m)#store features in matrix
@@ -107,67 +102,28 @@ not_used_fg_old <- function(data, n, m, L, F){
     print("")
   }#for i
   fg_df <- as.data.frame(X)
-  fg_df$Class <- y
+  fg_df$Driver <- y
   print(head(fg_df))
   print(dim(fg_df))
   return (fg_df)
 }#fg function
-
-# feature generation function
-# input => 
-#     data: a matrix(n*L,m) of raw signals.
-#     n: number of driving behaviors.
-#     m: number of variables or signals.
-#     L: the length of the signal.
-# output => 
-#     fg_df : is a dataframe(n,F*m + 1) of a feature set + its related class label.
-fg <- function(data, y, n, m, L, F){
-  
-  #     X: is a matrix(n,F*m) of a feature set.
-  X <- matrix(0.0, nrow = n, ncol = F*m)#store features in matrix
-  print("dim X")
-  print(dim(X))
-  #     y: is the for the class label for the driver behavior, 
-  #           where the driving behavior is a matrix(L,m).  
-  #y <- c(1:n)
-  for (i in 1:n){
-    cat("i: ", i)
-    
-    row_from <- (i-1)*L+1
-    row_to <- i* L
-    cat("\n from:", row_from, ", to:", row_to)
-    X[i, ] <- generate_feature_set(data[row_from:row_to,])
-    ############################################################
-    #####################  Note for test only ##################
-    ############################################################
-    #y[i] <- toString(floor((i-1)/2) + 1) # this should be changed to the actual class label
-    #print(X[i, ] )
-    
-    #for(j in 1:m){
-    #  cat(", j:", j)
-    #}#for j
-    print("")
-  }#for i
-  fg_df <- as.data.frame(X)
-  print("End creating fg_df from X")
-  print(dim(fg_df))
-  fg_df$Class <- as.vector(y[1:n])#y
-  fg_df$Class <- factor(fg_df$Class)
-  print(head(fg_df))
-  print(dim(fg_df))
-  return (fg_df)
-}#fg function
-#data_m <- get_dataset(n, m, L)
-dim(data_m)
-n
-#fg_df <- fg(data_m, y, n, m, L, F)
-fg_df <- fg(data_m, y, n, m, L, F)
-#target_column <- c("Class")
-#fg_df <- do_min_max_normalization(fg_df)
-dim(fg_df)
-
-length(y)
+data_m <- get_dataset(n, m, L)
+fg_df <- fg(data_m, n, m, L, F)
 dim(fg_df)
 
 
+#data_m[1:10,]
+#f1 <- apply(data_m[1:10,], 2, mean) #get mean by column as second paramater = 2
+#f2 <- apply(data_m[1:10,], 2, mean) #get mean by column as second paramater = 2
+# apply(data_m[1:30,], 2, kurtosis)
+#c(f1, f2)
 
+#generate_feature_set(data_m[1:30,])
+# matrix(1.0, nrow = 2, ncol = 3)
+
+
+
+#x <- 1:4
+
+#fft_vec <- fft(x)
+#Re(fft_vec)

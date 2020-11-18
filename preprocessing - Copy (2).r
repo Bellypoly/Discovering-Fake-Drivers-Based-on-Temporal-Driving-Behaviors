@@ -94,18 +94,6 @@ do_segmentation <- function(df, selected_signals, m, classes, chunk_size=100,ove
 data_df_scaled <- get_dataset_org(file_org_dataset)
 dim(data_df_scaled)
 head(data_df_scaled)
-
-do_class_label_count <- function(df){
-  counts <- df %>% group_by(Class) %>% summarise(no_rows = length(Class))
-  print(counts)
-}
-do_class_label_count(data_df_scaled)
-##library(dplyr)
-#data_df_scaled %>% 
-#  group_by(Class) %>%
-#  summarise(no_rows = length(Class))
-
-
 data_df_selected_signals <- data_df_scaled[, selected_signals_class]
 dim(data_df_selected_signals)
 
@@ -124,3 +112,47 @@ nrow(data_m)
 print("end segemetation")
 
 
+#data_m <- matrix(unlist(list_df_segmented), nrow = n, byrow = TRUE) 
+#data_m <- matrix(unlist(list_df_segmented), ncol = (m+1), byrow = TRUE) 
+#selected_signals
+#as.matrix(list_df_segmented[[1]][selected_signals])
+#n
+
+
+
+
+#colnames(data_df_scaled)
+#as.data.frame(apply(data_df_scaled[, 1:ncol(data_df_scaled)-1], 2, function(x) (x - min(x))/(max(x)-min(x))))
+# check that we get mean of 0 and sd of 1
+#colMeans(data_df_scaled)  # faster version of apply(scaled.dat, 2, mean)
+#apply(data_df_scaled, 2, sd)
+
+#http://www.sthda.com/english/wiki/one-way-anova-test-in-r
+#Anova
+#aov(Class ~ ., data = data_df_scaled)
+
+#library(preprocessCore)
+#normalize(data_df_scaled)
+#normalize(x, method = "standardize", range = c(0, 1), margin = 1L, on.constant = "quiet")
+#data_df_scaled[,]
+#chisq <- chisq.test(data_df_scaled[,!(names(data_df_scaled) %in% target_column)])
+# Observed counts
+#chisq$observed
+#round(chisq$expected,2)
+#round(chisq$residuals, 3)
+#library(corrplot)
+#corrplot(chisq$residuals, is.cor = FALSE)
+
+#disc<-"equal interval width"
+#X <- data_df_scaled[,!(names(data_df_scaled) %in% target_column)]
+#select.inf.chi2(X,disc.method=disc,attrs.nominal=attrs.nominal)
+
+
+# prepare training scheme
+#control <- trainControl(method="repeatedcv", number=10, repeats=3)
+# train the model
+#model <- train(Class~., data=data_df_scaled, method="lvq", preProcess="scale", trControl=control)
+# estimate variable importance
+#importance <- varImp(model, scale=FALSE)
+# summarize importance
+#print(importance)
