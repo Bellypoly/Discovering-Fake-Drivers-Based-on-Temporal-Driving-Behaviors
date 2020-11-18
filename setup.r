@@ -4,8 +4,9 @@ setwd("/Users/hgellban/Documents/111_one_drive/OneDrive - Texas Tech University/
 file_org_dataset <- "./dataset/Driving_Data_KIA_SOUL.csv"
 #dataset description: https://www.iit.cnr.it/sites/default/files/human-behavior-characterization.pdf
 
-
-selected_signals <- c(
+chunk_size = 100
+overlap_ratio = 0.5
+selected_signals_class <- c(
   "Accelerator_Pedal_value",
   "Short_Term_Fuel_Trim_Bank1",
   "Intake_air_pressure",
@@ -17,5 +18,6 @@ selected_signals <- c(
   "Calculated_road_gradient",
   "Acceleration_speed_._Lateral",
   "Steering_wheel_speed",
-  "Steering_wheel_angle"
+  "Steering_wheel_angle",
+  "Class"
 )
