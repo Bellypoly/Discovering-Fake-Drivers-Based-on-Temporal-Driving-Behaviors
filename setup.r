@@ -17,6 +17,37 @@ set.seed(1)
 
 selected_signals_class <- c(
   "Accelerator_Pedal_value",
+  #"Short_Term_Fuel_Trim_Bank1",
+  #"Intake_air_pressure",
+  #"Filtered_Accelerator_Pedal_value",
+  #"Engine_soacking_time",
+  "Acceleration_speed_._Longitudinal",
+  "Indication_of_brake_switch_ON.OFF",
+  #"Master_cylinder_pressure",
+  "Calculated_road_gradient",
+  "Acceleration_speed_._Lateral",
+  "Steering_wheel_speed",
+  "Steering_wheel_angle",
+  "Class"
+)
+selected_signals_class <- c(
+  "Accelerator_Pedal_value",
+  #"Short_Term_Fuel_Trim_Bank1",
+  #"Intake_air_pressure",
+  #"Filtered_Accelerator_Pedal_value",
+  #"Engine_soacking_time",
+  "Acceleration_speed_._Longitudinal",
+  "Indication_of_brake_switch_ON.OFF",
+  #"Master_cylinder_pressure",
+  "Calculated_road_gradient",
+  "Acceleration_speed_._Lateral",
+  "Steering_wheel_speed",
+  "Steering_wheel_angle",
+  "Class"
+)
+
+selected_signals_class <- c(
+  "Accelerator_Pedal_value",
   "Short_Term_Fuel_Trim_Bank1",
   "Intake_air_pressure",
   #"Filtered_Accelerator_Pedal_value",
@@ -35,8 +66,8 @@ selected_signals
 m <- length(selected_signals)
 m
 L <- chunk_size
-target <- tail(selected_signals_class, n=1)
-
+target <- c(tail(selected_signals_class, n=1))
+target
 
 library(e1071) # used for kurtosis, skewness
 # Splitting the dataset into the Training set and Test set 

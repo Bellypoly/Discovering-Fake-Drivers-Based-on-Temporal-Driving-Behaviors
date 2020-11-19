@@ -142,5 +142,7 @@ length(y)
 X_feature_col_names <- head(colnames(fg_df),-1)
 fg_df_class_labels <- fg_df$Class
 fg_df <- do_drop_high_correlated_featured(fg_df[,X_feature_col_names])
+fg_df <- do_min_max_normalization(fg_df)
 fg_df$Class <- fg_df_class_labels
 dim(fg_df)
+

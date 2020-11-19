@@ -6,6 +6,7 @@ getwd()
 do_min_max_normalization <- function(data_df_X){
   X<- scale(data_df_X)
   #X <- data_df[,!(names(data_df) %in% target_column)]
+#  X <- as.data.frame(apply(X[, 1:ncol(X)-1], 2, function(x) (x - min(x))/(max(x)-min(x))))
   X <- as.data.frame(apply(X[, 1:ncol(X)-1], 2, function(x) (x - min(x))/(max(x)-min(x))))
   #data_df[,!(names(data_df) %in% target_column)] <- X
   return (X)
@@ -22,29 +23,19 @@ get_dataset_org <- function(file_org_dataset){
   
   #replace letters with numbers
   data_df$Class <- as.numeric(factor(data_df$Class))  
-  #unique(data_df$Class)   
-  #head(data_df[,!(names(data_df) %in% target_column)])
-  #sum(is.na(scale(data_df[1:10,!(names(data_df) %in% target_column)])))
-  
-#  #scale only X without y
-#  #data_df[,!(names(data_df) %in% target_column)]<- scale(data_df[,!(names(data_df) %in% target_column)], scale = FALSE)
-#  data_df[,!(names(data_df) %in% target_column)]<- scale(data_df[,!(names(data_df) %in% target_column)])
-#  #data_df_scaled <- scale(data_df[,!(names(data_df) %in% target_column)])
-#  #data_df[,!(names(data_df) %in% target_column)] <-  apply(data_df_scaled, 2, sd)
-#  X <- data_df[,!(names(data_df) %in% target_column)]
-#  X <- as.data.frame(apply(X[, 1:ncol(X)-1], 2, function(x) (x - min(x))/(max(x)-min(x))))
-#  data_df[,!(names(data_df) %in% target_column)] <- X
+
   data_df[,!(names(data_df) %in% target_column)] <- do_min_max_normalization(data_df[,!(names(data_df) %in% target_column)])
-  
-  
-  
-  #x[1:2,]
-  #zero_columns <- c("Filtered_Accelerator_Pedal_value", "Inhibition_of_engine_fuel_cut_off", "Fuel_Pressure", "")
-  #colnames(x)[colSums(is.na(x)) > 0]
+
   
   #Drop Zero columns: Some columns have zero values which are useless. They result in null values after scaling data. We drop them
   zero_columns <- colnames(data_df)[colSums(is.na(data_df)) > 0]
-  data_df[,!(names(data_df) %in% zero_columns)] <- data_df[,!(names(data_df) %in% zero_columns)]  
+  print(dim(data_df))
+  print(zero_columns)
+  df_classes <- data_df[, target_column]
+  #data_df[,!(names(data_df) %in% zero_columns)] <- data_df[,!(names(data_df) %in% zero_columns)]  
+  data_df <- data_df[,!(names(data_df) %in% zero_columns)]  
+  data_df$Class <- df_classes
+  print(dim(data_df))
   
   return(data_df)
 }
@@ -96,8 +87,15 @@ do_class_label_count <- function(df){
   print(counts)
 }
 
+#################################################
+#################################################
+#################################################
 data_df_scaled <- get_dataset_org(file_org_dataset)
 dim(data_df_scaled)
+#head(data_df_scaled[,!(names(data_df_scaled) %in% target_column)])
+
+#zero_columns <- colnames(data_df_scaled)[colSums(is.na(data_df_scaled)) > 0]
+#zero_columns
 #head(data_df_scaled)
 
 
