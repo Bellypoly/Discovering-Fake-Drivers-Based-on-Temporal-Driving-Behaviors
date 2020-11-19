@@ -54,7 +54,8 @@ generate_feature_set <- function(m_matrix){
   # we use apply with second paramater = 2, to compute a feature (e.g., mean) per column
   f1 <- apply(data_m, 2, mean) # get mean
   f2 <- apply(data_m, 2, sd) # get standard deviation
-  f3 <- apply(data_m, 2, min) # get min
+  #f3 <- apply(data_m, 2, min) # get min
+  f3 <- apply(data_m, 2, median) # get median as in min is always zero
   f4 <- apply(data_m, 2, max) # get max
   f5 <- apply(data_m, 2, kurtosis) # get kurtosis http://www.r-tutor.com/elementary-statistics/numerical-measures/kurtosis 
   f6 <- apply(data_m, 2, skewness) # get skewness http://www.r-tutor.com/elementary-statistics/numerical-measures/skewness
@@ -71,47 +72,7 @@ generate_feature_set <- function(m_matrix){
   return (feature_set_vec)
 }
 
-# feature generation function
-# input => 
-#     data: a matrix(n*L,m) of raw signals.
-#     n: number of driving behaviors.
-#     m: number of variables or signals.
-#     L: the length of the signal.
-# output => 
-#     fg_df : is a dataframe(n,F*m + 1) of a feature set + its related class label.
-not_used_fg_old <- function(data, n, m, L, F){
-  
-  #     X: is a matrix(n,F*m) of a feature set.
-  X <- matrix(0.0, nrow = n, ncol = F*m)#store features in matrix
-  print("dim X")
-  print(dim(X))
-  #     y: is the for the class labelfor the driver behavior, 
-  #           where the driving behavior is a matrix(L,m).  
-  y <- c(1:n)
-  for (i in 1:n){
-    cat("i: ", i)
-    
-    row_from <- (i-1)*L+1
-    row_to <- i* L
-    cat("\n from:", row_from, ", to:", row_to)
-    X[i, ] <- generate_feature_set(data[row_from:row_to,])
-    ############################################################
-    #####################  Note for test only ##################
-    ############################################################
-    y[i] <- toString(floor((i-1)/2) + 1) # this should be changed to the actual class label
-    #print(X[i, ] )
-    
-    #for(j in 1:m){
-    #  cat(", j:", j)
-    #}#for j
-    print("")
-  }#for i
-  fg_df <- as.data.frame(X)
-  fg_df$Class <- y
-  print(head(fg_df))
-  print(dim(fg_df))
-  return (fg_df)
-}#fg function
+
 
 # feature generation function
 # input => 
@@ -168,6 +129,3 @@ dim(fg_df)
 
 length(y)
 dim(fg_df)
-
-
-

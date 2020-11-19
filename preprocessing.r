@@ -90,17 +90,18 @@ do_segmentation <- function(df, selected_signals, m, classes, chunk_size=100,ove
   
 }
 
-
-data_df_scaled <- get_dataset_org(file_org_dataset)
-dim(data_df_scaled)
-head(data_df_scaled)
-
+#library(dplyr)
 do_class_label_count <- function(df){
   counts <- df %>% group_by(Class) %>% summarise(no_rows = length(Class))
   print(counts)
 }
+
+data_df_scaled <- get_dataset_org(file_org_dataset)
+dim(data_df_scaled)
+#head(data_df_scaled)
+
+
 do_class_label_count(data_df_scaled)
-##library(dplyr)
 #data_df_scaled %>% 
 #  group_by(Class) %>%
 #  summarise(no_rows = length(Class))
@@ -111,7 +112,7 @@ dim(data_df_selected_signals)
 
 
 
-classes <- unique(data_df_selected_signals$Class)
+classes <- sort(unique(data_df_selected_signals$Class))
 #list_df_segmented <- do_segmentation(data_df_selected_signals, selected_signals, m, classes, chunk_size=chunk_size,overlap_ratio=overlap_ratio)
 list_segmented_X_y <- do_segmentation(data_df_selected_signals, selected_signals, m, classes, chunk_size=chunk_size,overlap_ratio=overlap_ratio)
 data_m <- list_segmented_X_y$X

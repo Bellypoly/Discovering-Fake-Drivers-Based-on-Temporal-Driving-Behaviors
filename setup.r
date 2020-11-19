@@ -1,12 +1,15 @@
 getwd() #"/Users/hgellban
 #/Users/hgellban/Documents/111_one_drive/OneDrive - Texas Tech University/ttu-cs/2020fall/programming_with_R/project/code
 #setwd("/Users/hgellban/Documents/111_one_drive/OneDrive - Texas Tech University/ttu-cs/2020fall/programming_with_R/project/code/Discovering-Fake-Drivers-Based-on-Temporal-Driving-Behaviors")
-setwd("C:/Users/habugell/OneDrive - Texas Tech University/ttu-cs/2020fall/programming_with_R/project/code/Discovering-Fake-Drivers-Based-on-Temporal-Driving-Behaviors")
+getwd()
+#setwd("C:/Users/habugell/OneDrive - Texas Tech University/ttu-cs/2020fall/programming_with_R/project/code/Discovering-Fake-Drivers-Based-on-Temporal-Driving-Behaviors")
+setwd("/Users/hgellban/Documents/111_one_drive/OneDrive - Texas Tech University/ttu-cs/2020fall/programming_with_R/project/code/Discovering-Fake-Drivers-Based-on-Temporal-Driving-Behaviors")
+getwd()
 file_org_dataset <- "./dataset/Driving_Data_KIA_SOUL.csv"
 #dataset description: https://www.iit.cnr.it/sites/default/files/human-behavior-characterization.pdf
 
 chunk_size <- 30#100
-overlap_ratio <- 0.5
+overlap_ratio <- 0.90#0.5
 
 training_ratio <- 0.5 #0.8
 
@@ -61,3 +64,6 @@ library(GGally)
 library(randomForest)
 
 require(caTools)
+
+library(dplyr)
+
