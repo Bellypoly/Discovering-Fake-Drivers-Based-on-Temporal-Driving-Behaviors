@@ -3,16 +3,9 @@ getwd() #"/Users/hgellban
 source("fg.r")
 getwd() #"/Users/hgellban
 
-#do_drop_high_correlated_featured <- function(data){
-#  tmp <- cor(data)
-#  tmp[upper.tri(tmp)] <- 0
-#  diag(tmp) <- 0  
-#  data_new <- data[,!apply(tmp,2,function(x) any(x > 0.99))]
-#  dim(data_new)
-#}
-#dim(fg_df)
-#do_drop_high_correlated_featured(fg_df)
-#cor(as.matrix(fg_df))
+
+#X <- fg_df[,head(colnames(fg_df),-1)]
+#X_c <- cor(X)
 
 classifier <- function(df_train, df_test, classifier_type = "ctree") {
   cls <- NULL
@@ -78,7 +71,8 @@ classifier <- function(df_train, df_test, classifier_type = "ctree") {
 
 draw_features <- function(data){
   df_train <- data
-  selected_features <- c("V1", "V11", "V21")
+  #selected_features <- c("V1", "V11", "V21")
+  selected_features <- c("V1", "V2", "V3", "V4", "V5")
   featurePlot(x = df_train[, selected_features], 
               y = df_train$Class, 
               plot = "pairs",
@@ -124,10 +118,6 @@ classifier(df_train, df_test, classifier_type = "svm")
 classifier(df_train, df_test, classifier_type = "rf")
 classifier(df_train, df_test, classifier_type = "knn")
 
-microbenchmark(
-  classifier(df_train, df_test, classifier_type = "ctree"),
-  classifier(df_train, df_test, classifier_type = "svm")  
-)
 
 
 draw_features(df_train)

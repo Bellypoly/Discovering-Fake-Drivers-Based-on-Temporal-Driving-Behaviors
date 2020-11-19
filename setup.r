@@ -9,7 +9,7 @@ file_org_dataset <- "./dataset/Driving_Data_KIA_SOUL.csv"
 #dataset description: https://www.iit.cnr.it/sites/default/files/human-behavior-characterization.pdf
 
 chunk_size <- 30#100
-overlap_ratio <- 0.90#0.5
+overlap_ratio <- 0.5#0.90#0.5
 
 training_ratio <- 0.5 #0.8
 

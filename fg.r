@@ -118,6 +118,16 @@ fg <- function(data, y, n, m, L, F){
   print(dim(fg_df))
   return (fg_df)
 }#fg function
+
+do_drop_high_correlated_featured <- function(data){
+  tmp <- cor(data)
+  tmp[upper.tri(tmp)] <- 0
+  diag(tmp) <- 0  
+  data_new <- data[,!apply(tmp,2,function(x) any(x > 0.99))]
+  print(dim(data_new))
+  return (data_new)
+}
+
 #data_m <- get_dataset(n, m, L)
 dim(data_m)
 n
@@ -128,4 +138,9 @@ fg_df <- fg(data_m, y, n, m, L, F)
 dim(fg_df)
 
 length(y)
+
+X_feature_col_names <- head(colnames(fg_df),-1)
+fg_df_class_labels <- fg_df$Class
+fg_df <- do_drop_high_correlated_featured(fg_df[,X_feature_col_names])
+fg_df$Class <- fg_df_class_labels
 dim(fg_df)
