@@ -11,7 +11,11 @@ file_org_dataset <- "./dataset/Driving_Data_KIA_SOUL.csv"
 chunk_size <- 30#100
 overlap_ratio <- 0.5#0.90#0.5
 
-training_ratio <- 0.5 #0.8
+training_ratio <- 0.98#0.9 #0.8 #0.5 #0.8
+
+W <- 2#10#2#1#2 #number of windows for each splitted sequence during feature generation
+
+max_drivers <- 5
 
 set.seed(1)
 

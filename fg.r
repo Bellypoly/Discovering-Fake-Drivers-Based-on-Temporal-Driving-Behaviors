@@ -66,8 +66,8 @@ generate_feature_set <- function(m_matrix){
   #  feature_set_vec <- c(feature_set_vec, features_func[i])
   #}
   feature_set_vec <- c(f1, f2, f3, f4, f5, f6, f7)
-  print("feature_set_vec length")
-  print(length(feature_set_vec))
+  #print("feature_set_vec length")
+  #print(length(feature_set_vec))
   #feature_set_vec <- feature_set_vec[2:length(feature_set_vec)-1]
   return (feature_set_vec)
 }
@@ -82,7 +82,7 @@ generate_feature_set <- function(m_matrix){
 #     L: the length of the signal.
 # output => 
 #     fg_df : is a dataframe(n,F*m + 1) of a feature set + its related class label.
-fg <- function(data, y, n, m, L, F){
+old_fg <- function(data, y, n, m, L, F){
   
   #     X: is a matrix(n,F*m) of a feature set.
   X <- matrix(0.0, nrow = n, ncol = F*m)#store features in matrix
@@ -119,11 +119,58 @@ fg <- function(data, y, n, m, L, F){
   return (fg_df)
 }#fg function
 
+fg <- function(data, y, n, m, L, F, W){
+  
+  #     X: is a matrix(n,F*m) of a feature set.
+  X <- matrix(0.0, nrow = n, ncol = W*F*m)#store features in matrix
+  print("dim X")
+  print(dim(X))
+  #     y: is the for the class label for the driver behavior, 
+  #           where the driving behavior is a matrix(L,m).  
+  #y <- c(1:n)
+  for (i in 1:n){
+    cat("i: ", i)
+    
+    row_from <- (i-1)*L+1
+    row_to <- i* L
+    cat("\n from:", row_from, ", to:", row_to)
+    #X[i, ] <- generate_feature_set(data[row_from:row_to,])
+    df_x <- (row_from:row_to)#whole sequence
+    L_W <- floor(L / W) -1 
+    x <- c()
+    for (w in 1:W){
+      row_from_w <- row_from
+      row_to_w <- row_from_w + L_W
+      x <- c(x, generate_feature_set(data[row_from_w:row_to_w,]))
+      row_from_w <- row_to_w
+    }
+    X[i, ] <- x
+    ############################################################
+    #####################  Note for test only ##################
+    ############################################################
+    #y[i] <- toString(floor((i-1)/2) + 1) # this should be changed to the actual class label
+    #print(X[i, ] )
+    
+    #for(j in 1:m){
+    #  cat(", j:", j)
+    #}#for j
+    print("")
+  }#for i
+  fg_df <- as.data.frame(X)
+  print("End creating fg_df from X")
+  print(dim(fg_df))
+  fg_df$Class <- as.vector(y[1:n])#y
+  fg_df$Class <- factor(fg_df$Class)
+  print(head(fg_df))
+  print(dim(fg_df))
+  return (fg_df)
+}#fg function
 do_drop_high_correlated_featured <- function(data){
   tmp <- cor(data)
   tmp[upper.tri(tmp)] <- 0
   diag(tmp) <- 0  
-  data_new <- data[,!apply(tmp,2,function(x) any(x > 0.99))]
+  #data_new <- data[,!apply(tmp,2,function(x) any(x > 0.99))]
+  data_new <- data[,!apply(tmp,2,function(x) any(x > 0.9))]
   print(dim(data_new))
   return (data_new)
 }
@@ -132,7 +179,10 @@ do_drop_high_correlated_featured <- function(data){
 dim(data_m)
 n
 #fg_df <- fg(data_m, y, n, m, L, F)
-fg_df <- fg(data_m, y, n, m, L, F)
+fg_df <- fg(data_m, y, n, m, L, F, W)
+
+
+
 #target_column <- c("Class")
 #fg_df <- do_min_max_normalization(fg_df)
 dim(fg_df)
@@ -141,8 +191,11 @@ length(y)
 
 X_feature_col_names <- head(colnames(fg_df),-1)
 fg_df_class_labels <- fg_df$Class
-fg_df <- do_drop_high_correlated_featured(fg_df[,X_feature_col_names])
+#fg_df <- do_drop_high_correlated_featured(fg_df[,X_feature_col_names])
+fg_df <- fg_df[,X_feature_col_names]
+dim(fg_df)
 fg_df <- do_min_max_normalization(fg_df)
+fg_df <- do_drop_high_correlated_featured(fg_df)
 fg_df$Class <- fg_df_class_labels
 dim(fg_df)
 
