@@ -38,7 +38,7 @@ get_dataset <- function(n, m, L){
 
 # https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/fft
 # Fast Discrete Fourier Transform (FFT)
-not_used_get_fft <- function(data_m){
+get_fft <- function(data_m){
   fft_vec <- apply(data_m, 2, fft)
   fft_vec <- Re(fft_vec)  
   return (data_m)
@@ -48,7 +48,7 @@ not_used_get_fft <- function(data_m){
 # output => feature_set_vec: is a vector(F*m), where F is the number of features.
 generate_feature_set <- function(m_matrix){
   data_m <- m_matrix
-  #data_m <- get_fft(m_matrix)
+  data_m <- get_fft(m_matrix)
   
   #data_m <- get_fourier(function(t,w) {sin(w*t)}, 1, ts=m_matrix) 
   # we use apply with second paramater = 2, to compute a feature (e.g., mean) per column
