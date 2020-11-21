@@ -7,7 +7,7 @@ do_min_max_normalization <- function(data_df_X){
   X<- scale(data_df_X)
   #X <- data_df[,!(names(data_df) %in% target_column)]
 #  X <- as.data.frame(apply(X[, 1:ncol(X)-1], 2, function(x) (x - min(x))/(max(x)-min(x))))
-  X <- as.data.frame(apply(X[, 1:ncol(X)-1], 2, function(x) (x - min(x))/(max(x)-min(x))))
+  X <- as.data.frame(apply(X[, 1:ncol(X)], 2, function(x) (x - min(x))/(max(x)-min(x))))
   #data_df[,!(names(data_df) %in% target_column)] <- X
   return (X)
 }

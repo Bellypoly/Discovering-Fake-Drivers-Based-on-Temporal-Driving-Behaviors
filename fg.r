@@ -179,9 +179,10 @@ do_drop_high_correlated_featured <- function(data){
 dim(data_m)
 n
 #fg_df <- fg(data_m, y, n, m, L, F)
-fg_df <- fg(data_m, y, n, m, L, F, W)
+fg_df_all <- fg(data_m, y, n, m, L, F, W)
 
 
+fg_df <- fg_df_all
 
 #target_column <- c("Class")
 #fg_df <- do_min_max_normalization(fg_df)
@@ -190,12 +191,19 @@ dim(fg_df)
 length(y)
 
 X_feature_col_names <- head(colnames(fg_df),-1)
+X_feature_col_names
 fg_df_class_labels <- fg_df$Class
+fg_df_class_labels 
 #fg_df <- do_drop_high_correlated_featured(fg_df[,X_feature_col_names])
 fg_df <- fg_df[,X_feature_col_names]
 dim(fg_df)
 fg_df <- do_min_max_normalization(fg_df)
-fg_df <- do_drop_high_correlated_featured(fg_df)
+dim(fg_df)
+if (is_drop_high_correlated){
+  fg_df <- do_drop_high_correlated_featured(fg_df)
+  print("Done do_drop_high_correlated_featured")
+}
+
 fg_df$Class <- fg_df_class_labels
 dim(fg_df)
 

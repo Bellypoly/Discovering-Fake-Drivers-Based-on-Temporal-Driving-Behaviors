@@ -99,6 +99,9 @@ df_test <- fg_df[-samp,]
 dim(df_train)
 dim(df_test)
 
+write.csv(df_train,file="dataset/df_train.csv")
+write.csv(df_train,file="dataset/df_test.csv")
+
 
 df_train <- droplevels(df_train)
 do_class_label_count(fg_df)
