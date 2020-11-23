@@ -6,7 +6,30 @@ getwd() #"/Users/hgellban
 
 #X <- fg_df[,head(colnames(fg_df),-1)]
 #X_c <- cor(X)
-
+do_metrics <- function(y_pred, y_test){
+  cm <- confusionMatrix(y_pred, y_test)
+  #print(cm)
+  
+  accuracy <- cm[["overall"]]["Accuracy"]#for multiclass classification problems
+  cat("accuracy=", accuracy, "\n")
+  
+  precision <- cm[["byClass"]][ , "Precision"] #for multiclass classification problems
+  #cat("\n precision per class=", precision, "\n")
+  cat("weighted precision=", sum(precision)/length(precision), "\n")
+  
+  
+  recall <- cm[["byClass"]][ , "Recall"] #for multiclass classification problems
+  #cat("\n recall per class=", recall, "\n")
+  cat("weighted recall=", sum(recall)/length(recall), "\n")
+  
+  # extract F1 score for all classes
+  f1 <- cm[["byClass"]][ , "F1"] #for multiclass classification problems
+  #cat("\n f1 per class=", f1, "\n")
+  cat("weighted f1=", sum(f1)/length(f1), "\n")
+  
+  #pred <- prediction(as.list(y_pred), as.list(y_test))
+  #RP.perf <- performance(pred, "prec", "rec")  
+}
 classifier <- function(df_train, df_test, classifier_type = "ctree", k=3, ntree=1000) {
   cls <- NULL
   
@@ -41,26 +64,29 @@ classifier <- function(df_train, df_test, classifier_type = "ctree", k=3, ntree=
     y_pred <- predict(cls, newdata = df_test)
     y_test <- df_test$Class
   }
-  
-  print("y_test")
-  print(y_test)
-  print("y_pred")
-  print(y_pred)
-  confusionMatrix(y_pred, y_test)
+  n_classes <- length(unique(df_train$Class))
+  #print("y_test")
+  #print(y_test)
+  #print("y_pred")
+  #print(y_pred)
+  #confusionMatrix(y_pred, y_test)
+  do_metrics(y_pred, y_test)
+
   
   # Plot the data 
   #plot(df_train)#, pch = 16) 
   #abline(cls)
 }#classifier
 
-draw_features <- function(data){
+draw_features <- function(data, n_variables=10){
   df_train <- data
   #selected_features <- c("V1", "V11", "V21")
-  selected_features <- c("V1", "V2", "V3", "V4", "V5")
-  featurePlot(x = df_train[, selected_features], 
-              y = df_train$Class, 
-              plot = "pairs",
-              auto.key = list(columns = 2))
+  #selected_features <- c("V1", "V2", "V3", "V4", "V5")
+  selected_features <- head(colnames(data),n_variables)#2)
+  #featurePlot(x = df_train[, selected_features], 
+  #            y = df_train$Class, 
+  #            plot = "pairs",
+  #            auto.key = list(columns = 2))
   
   featurePlot(x = df_train[, selected_features], 
               y = df_train$Class,
@@ -71,7 +97,7 @@ draw_features <- function(data){
               pch = "|", 
               layout = c(2, 1), 
               auto.key = list(columns = 2))
-  ggpairs(df_train[, selected_features], title = "Scatterplot Matrix of the Features of the Haberman's Survival Data Set")
+  ggpairs(df_train[, selected_features], title = "Scatterplot Matrix of the First Features of the Driver Data Set")
   
   
 }
@@ -100,7 +126,7 @@ dim(df_train)
 dim(df_test)
 
 write.csv(df_train,file="dataset/df_train.csv")
-write.csv(df_train,file="dataset/df_test.csv")
+write.csv(df_test,file="dataset/df_test.csv")
 
 
 df_train <- droplevels(df_train)
@@ -121,9 +147,11 @@ classifier(df_train, df_test, classifier_type = "knn", k=1)
 classifier(df_train, df_test, classifier_type = "knn", k=3)
 classifier(df_train, df_test, classifier_type = "knn", k=5)
 classifier(df_train, df_test, classifier_type = "knn", k=7)
+classifier(df_train, df_test, classifier_type = "knn", k=sqrt(nrow(df_train)))
 
 
 
-draw_features(df_train)
-subset(df_train, select = -c(Class) )
+draw_features(df_train, n_variables=5)
+#subset(df_train, select = -c(Class) )
 print("end plotting")
+

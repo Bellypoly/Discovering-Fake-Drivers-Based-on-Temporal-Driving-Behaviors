@@ -1,5 +1,5 @@
 ## read data 
-org_df <- read.csv(file = "Driving_Data_KIA_SOUL.csv", header = T, stringsAsFactors = T)
+org_df <- read.csv(file = "dataset/Driving_Data_KIA_SOUL.csv", header = T, stringsAsFactors = T)
 
 ##Looking at the data
 str(org_df)
@@ -89,72 +89,12 @@ print(rfModel)
 
 #Evaluate variable importance
 importance(rfModel)
+signal_importance <- importance(rfModel)
 varImp(rfModel)
 
-
+varimp <- varImp(rfModel)
 #plots the most important features of our data with it's value
 varImpPlot(rfModel)
-
+varimp_plot <- varImpPlot(rfModel)
 ggplot(rfModel)
-
-
-# library(randomForest)
-# library(ggplot2)
-# 
-# # make dataframe from importance() output
-# feat_imp_df <- importance(rfModel) %>%
-#   data.frame() %>%
-#   mutate(feature = row.names(.))
-# 
-# # plot dataframe
-# ggplot(feat_imp_df, aes(x = reorder(feature, MeanDecreaseGini),
-#                         y = MeanDecreaseGini)) +
-#   geom_bar(stat='identity') +
-#   coord_flip() +
-#   theme_classic() +
-#   labs(
-#     x     = "Feature",
-#     y     = "Importance",
-#     title = "Feature Importance: <Model>"
-#   )
-# 
-# set.seed(7)
-# library(caret)
-# # calculate correlation matrix
-# correlationMatrix <- cor(train[,1:47], use="complete.obs")
-# 
-# # summarize the correlation matrix
-# print(correlationMatrix)
-# 
-# correlationMatrix <-na.omit(correlationMatrix)
-# print(correlationMatrix)
-# 
-# # find attributes that are highly corrected (ideally >0.75)
-# highlyCorrelated <- findCorrelation(correlationMatrix, cutoff=0.5)
-# 
-# # print indexes of highly correlated attributes
-# print(highlyCorrelated)
-# 
-# #Creating a new dataframe with the most important 10 features
-# sub_df <- train[,c(5,7,9,12,15,20,30,31,33,35)]
-# summary(sub_df)
-# str(sub_df)
-# dim(sub_df)
-
-#Time Series data
-data.ts= ts(sub_data,start =1, end = 500, frequency = 4 )
-
-#K-means clustering
-library(factoextra)
-
-k2 <- kmeans(sub_df, centers = 5, nstart = 25)
-str(k2)
-
-k2
-fviz_cluster(k2, data = sub_df)
-
-distance <- get_dist(sub_df) #computing euclidean distance matrix between the rows of a data
-
-#Visualizing a distance matrix
-fviz_dist(distance, gradient = list(low = "#00AFBB", mid = "white", high = "#FC4E07"))
 

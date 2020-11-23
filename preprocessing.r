@@ -63,10 +63,15 @@ do_segmentation <- function(df, selected_signals, m, classes, chunk_size=100,ove
   drivers_vec <- classes
   all_lists <- list()
   y <- c()
+  max_sample <- 100
   for (i in classes){
     c_df <- subset(df, Class==i)
 #    l_df <- do_chunk(c_df, chunk_size=chunk_size,overlap_ratio=overlap_ratio)
     l_df <- do_chunk(c_df[, selected_signals], chunk_size=chunk_size,overlap_ratio=overlap_ratio)
+    if (length(l_df)>max_sample){
+      l_df <- l_df[1:max_sample]
+      cat("\n #####size of l_df", length(l_df),"\n")
+    }
     l_y <- rep(i, length(l_df))
     y <- c(y,l_y)
     all_lists <- c(all_lists,l_df)
@@ -92,6 +97,7 @@ do_class_label_count <- function(df){
 #################################################
 data_df_scaled <- get_dataset_org(file_org_dataset)
 dim(data_df_scaled)
+colnames(data_df_scaled)
 #head(data_df_scaled[,!(names(data_df_scaled) %in% target_column)])
 
 #zero_columns <- colnames(data_df_scaled)[colSums(is.na(data_df_scaled)) > 0]
