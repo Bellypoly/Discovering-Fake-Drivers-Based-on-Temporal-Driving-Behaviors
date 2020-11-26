@@ -142,7 +142,7 @@ do_class_label_count(df_test)
 
 classifier(df_train, df_test, classifier_type = "ctree")
 classifier(df_train, df_test, classifier_type = "svm")
-classifier(df_train, df_test, classifier_type = "rf", ntree=500)
+classifier(df_train, df_test, classifier_type = "rf", ntree=1500)
 classifier(df_train, df_test, classifier_type = "knn", k=1)
 classifier(df_train, df_test, classifier_type = "knn", k=3)
 classifier(df_train, df_test, classifier_type = "knn", k=5)

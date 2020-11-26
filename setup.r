@@ -8,14 +8,15 @@ getwd()
 file_org_dataset <- "./dataset/Driving_Data_KIA_SOUL.csv"
 #dataset description: https://www.iit.cnr.it/sites/default/files/human-behavior-characterization.pdf
 
-chunk_size <- 30#10#100
+#segmentation
+chunk_size <- 20#10#30#10#100
 overlap_ratio <- 0.5#0.5#0.90#0.5
 
 training_ratio <- 0.8#0.98#0.9 #0.8 #0.5 #0.8
 
-W <- 1#2#1#2#10#2#1#2 #number of windows for each splitted sequence during feature generation
+W <-2#1#2#5#6#2#1#2#1#2#1#2#10#2#1#2 #number of windows for each splitted sequence during feature generation
 
-max_drivers <- 10#2#3#2#10#2#10
+max_drivers <- 10#6#4#2#10#2#3#2#10#2#10
 is_drop_high_correlated <- TRUE#FALSE
 
 set.seed(1)
