@@ -9,7 +9,7 @@
 #n <- 20 # number of driving behaviors
 #m <- 10 # number of variables/ Signals
 #L <- 30 #length of the signal
-F <- 7 # number of feature algorithms or #features
+F <- 6#8#2#8 # number of feature algorithms or #features
 #source("setup.r")
 source("preprocessing.r")
 
@@ -43,6 +43,14 @@ get_fft <- function(data_m){
   fft_vec <- Re(fft_vec)  
   return (data_m)
 }
+
+do_kurtosis_of_diff <- function(signal){
+  return (kurtosis(diff(signal)))
+}
+
+do_skewness_of_diff <- function(signal){
+  return (skewness(diff(signal)))
+}
 # feature set generation, to generate a vector of features given a matrix
 # input => m_matrix: a matrix(L,m) of a segmented raw signals, L: the length of the signal.
 # output => feature_set_vec: is a vector(F*m), where F is the number of features.
@@ -59,13 +67,17 @@ generate_feature_set <- function(m_matrix){
   f4 <- apply(data_m, 2, max) # get max
   f5 <- apply(data_m, 2, kurtosis) # get kurtosis http://www.r-tutor.com/elementary-statistics/numerical-measures/kurtosis 
   f6 <- apply(data_m, 2, skewness) # get skewness http://www.r-tutor.com/elementary-statistics/numerical-measures/skewness
-  f7 <- apply(data_m, 2, mean) # get mean 
+  #f7 <- apply(data_m, 2, do_kurtosis_of_diff) # get diffenrence kurtosis 
+  #f8 <- apply(data_m, 2, do_skewness_of_diff) # get diffenrence kurtosis 
   #features_func <- c(mean, sd)# vector of function objects that will be used for generating the feature set the 
   #feature_set_vec <- 0.0
   #for(i in 1:length(features_func)){
   #  feature_set_vec <- c(feature_set_vec, features_func[i])
   #}
-  feature_set_vec <- c(f1, f2, f3, f4, f5, f6, f7)
+  
+#  feature_set_vec <- head(c(f1, f2, f3, f4, f5, f6, f7, f8), F)#get the first F features
+  feature_set_vec <- c(f1, f2, f3, f4, f5, f6)#get the first F features
+  cat("##Number of selected features: ", length(feature_set_vec), "\n")
   #print("feature_set_vec length")
   #print(length(feature_set_vec))
   #feature_set_vec <- feature_set_vec[2:length(feature_set_vec)-1]
@@ -82,42 +94,6 @@ generate_feature_set <- function(m_matrix){
 #     L: the length of the signal.
 # output => 
 #     fg_df : is a dataframe(n,F*m + 1) of a feature set + its related class label.
-old_fg <- function(data, y, n, m, L, F){
-  
-  #     X: is a matrix(n,F*m) of a feature set.
-  X <- matrix(0.0, nrow = n, ncol = F*m)#store features in matrix
-  print("dim X")
-  print(dim(X))
-  #     y: is the for the class label for the driver behavior, 
-  #           where the driving behavior is a matrix(L,m).  
-  #y <- c(1:n)
-  for (i in 1:n){
-    cat("i: ", i)
-    
-    row_from <- (i-1)*L+1
-    row_to <- i* L
-    cat("\n from:", row_from, ", to:", row_to)
-    X[i, ] <- generate_feature_set(data[row_from:row_to,])
-    ############################################################
-    #####################  Note for test only ##################
-    ############################################################
-    #y[i] <- toString(floor((i-1)/2) + 1) # this should be changed to the actual class label
-    #print(X[i, ] )
-    
-    #for(j in 1:m){
-    #  cat(", j:", j)
-    #}#for j
-    print("")
-  }#for i
-  fg_df <- as.data.frame(X)
-  print("End creating fg_df from X")
-  print(dim(fg_df))
-  fg_df$Class <- as.vector(y[1:n])#y
-  fg_df$Class <- factor(fg_df$Class)
-  print(head(fg_df))
-  print(dim(fg_df))
-  return (fg_df)
-}#fg function
 
 fg <- function(data, y, n, m, L, F, W){
   
@@ -145,15 +121,6 @@ fg <- function(data, y, n, m, L, F, W){
       row_from_w <- row_to_w
     }
     X[i, ] <- x
-    ############################################################
-    #####################  Note for test only ##################
-    ############################################################
-    #y[i] <- toString(floor((i-1)/2) + 1) # this should be changed to the actual class label
-    #print(X[i, ] )
-    
-    #for(j in 1:m){
-    #  cat(", j:", j)
-    #}#for j
     print("")
   }#for i
   fg_df <- as.data.frame(X)
@@ -167,10 +134,11 @@ fg <- function(data, y, n, m, L, F, W){
 }#fg function
 do_drop_high_correlated_featured <- function(data){
   tmp <- cor(data)
+  threshold_per = 0.99#0.9#0.99
   tmp[upper.tri(tmp)] <- 0
   diag(tmp) <- 0  
-  #data_new <- data[,!apply(tmp,2,function(x) any(x > 0.99))]
-  data_new <- data[,!apply(tmp,2,function(x) any(x > 0.9))]
+  #data_new <- data[,!apply(tmp,2,function(x) any(x > 0.9))]
+  data_new <- data[,!apply(tmp,2,function(x) any(x > threshold_per))]
   print(dim(data_new))
   return (data_new)
 }
@@ -206,4 +174,6 @@ if (is_drop_high_correlated){
 
 fg_df$Class <- fg_df_class_labels
 dim(fg_df)
+X_feature_col_names_after_drop_high_corr <- head(colnames(fg_df),-1)
+X_feature_col_names_after_drop_high_corr
 
