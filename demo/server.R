@@ -88,13 +88,33 @@ s <- function(input, output) {
   #   )
   # })
   
-  output$Plot <- renderPlot({
-    data = sample %>%
+  output$plot_driver <- renderPlot({
+    data = change_driver %>%
       filter(Driver %in% input$drivers) %>%
-      select(one_of(c("Driver", input$alg))) %>%
+      select(one_of(c("Driver", input$alg_driver))) %>%
       gather(Algorithm, Accuracy, -Driver)
     
     ggplot(data = data, aes(x = Driver, y= Accuracy)) + 
+      geom_bar(aes(group = Algorithm, fill = Algorithm), stat = "identity", position = "dodge", color = "black") 
+  })
+  
+  output$plot_w <- renderPlot({
+    data = change_w %>%
+      filter(w %in% input$w) %>%
+      select(one_of(c("w", input$alg_w))) %>%
+      gather(Algorithm, Accuracy, -w)
+    
+    ggplot(data = data, aes(x = w, y= Accuracy)) + 
+      geom_bar(aes(group = Algorithm, fill = Algorithm), stat = "identity", position = "dodge", color = "black") 
+  })
+  
+  output$plot_seg <- renderPlot({
+    data = change_seg %>%
+      filter(seg %in% input$seg) %>%
+      select(one_of(c("seg", input$alg_seg))) %>%
+      gather(Algorithm, Accuracy, -seg)
+    
+    ggplot(data = data, aes(x = seg, y= Accuracy)) + 
       geom_bar(aes(group = Algorithm, fill = Algorithm), stat = "identity", position = "dodge", color = "black") 
   })
 }
